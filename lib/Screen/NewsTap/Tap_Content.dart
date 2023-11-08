@@ -17,8 +17,9 @@ class getTabContent extends StatelessWidget {
           } else if (snapshot.hasData) {
             return ListView.builder(
                 itemCount: snapshot.data!.articles!.length,
-                itemBuilder: (_, index) {
-                  return buildNewsWidget(snapshot.data!.articles![index]);
+                itemBuilder: (context, index) {
+                  return buildNewsWidget(
+                      context, snapshot.data!.articles![index]);
                 });
           } else {
             return Center(child: CircularProgressIndicator());
@@ -26,13 +27,26 @@ class getTabContent extends StatelessWidget {
         });
   }
 
-  Widget buildNewsWidget(ArticlesDM articles) {
+  Widget buildNewsWidget(BuildContext context, ArticlesDM articles) {
     return Container(
       margin: EdgeInsets.all(8),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Image.network(articles.urlToImage ??
-              "https://www.quantumbalancing.com/images/News2.gif"),
+          Stack(
+            alignment: Alignment.center ,
+            children: [
+              CircularProgressIndicator(),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    fit: BoxFit.fill,
+                    articles.urlToImage ??
+                        "https://www.quantumbalancing.com/images/News2.gif"),
+              ),
+            ],
+          ),
           SizedBox(height: 10),
           Text(
             articles.author ?? "",
@@ -43,7 +57,7 @@ class getTabContent extends StatelessWidget {
           Text(
             articles.title ?? "",
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 19,
             ),
             textAlign: TextAlign.start,
           ),
